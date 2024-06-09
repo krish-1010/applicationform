@@ -9,7 +9,27 @@ const Step1: React.FC = () => {
     control,
   } = useFormContext();
 
-  const imgFile = useWatch({
+  const bloodGroups = [
+    "A+",
+    "A-",
+    "B+",
+    "B-",
+    "AB+",
+    "AB-",
+    "O+",
+    "O-",
+    "A1+",
+    "A1-",
+    "A2+",
+    "A2-",
+    "A1B+",
+    "A1B-",
+    "A2B+",
+    "A2B-",
+    "Bombay Blood Group",
+  ];
+
+  const imgFileList = useWatch({
     control,
     name: "img",
   });
@@ -17,8 +37,8 @@ const Step1: React.FC = () => {
   const [imgPreview, setImgPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    if (imgFile && imgFile.length > 0) {
-      const file = imgFile[0];
+    if (imgFileList && imgFileList.length > 0) {
+      const file = imgFileList[0];
       const reader = new FileReader();
 
       reader.onloadend = () => {
@@ -29,7 +49,7 @@ const Step1: React.FC = () => {
     } else {
       setImgPreview(null);
     }
-  }, [imgFile]);
+  }, [imgFileList]);
 
   return (
     <div>
@@ -41,13 +61,15 @@ const Step1: React.FC = () => {
                 Application No
               </label>
               <input
-                type="text"
+                type="number"
                 id="appno"
                 {...register("appno")}
                 className="border-b outline-none border-black focus:border-b focus:ring-0"
               />
               {errors.appno?.message && (
-                <p>{errors.appno.message.toString()}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.appno.message.toString()}
+                </p>
               )}
             </div>
             <div className="flex">
@@ -55,12 +77,19 @@ const Step1: React.FC = () => {
                 Date
               </label>
               <input
-                type="text"
+                type="date"
                 id="date"
-                {...register("date")}
+                {...register("date", {
+                  setValueAs: (value) =>
+                    value === "" ? undefined : new Date(value),
+                })}
                 className="border-b outline-none border-black focus:border-b focus:ring-0"
               />
-              {errors.date?.message && <p>{errors.date.message.toString()}</p>}
+              {errors.date?.message && (
+                <p className="text-red-500 text-sm">
+                  {errors.date.message.toString()}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -74,7 +103,7 @@ const Step1: React.FC = () => {
               accept="image/*"
               hidden
             />
-            {errors.img?.message && <p>{errors.img.message.toString()}</p>}
+
             {imgPreview ? (
               <Image
                 src={imgPreview}
@@ -95,6 +124,11 @@ const Step1: React.FC = () => {
               </label>
             )}
           </div>
+          {errors.img?.message && (
+            <p className="text-red-500 text-sm text-center">
+              {errors.img.message.toString()}
+            </p>
+          )}
         </div>
       </div>
 
@@ -114,7 +148,11 @@ const Step1: React.FC = () => {
             {...register("fname")}
             className="border border-black"
           />
-          {errors.fname?.message && <p>{errors.fname.message.toString()}</p>}
+          {errors.fname?.message && (
+            <p className="text-red-500 text-sm">
+              {errors.fname.message.toString()}
+            </p>
+          )}
         </div>
         <div className="">
           <label htmlFor="sname" className="">
@@ -128,7 +166,11 @@ const Step1: React.FC = () => {
             {...register("sname")}
             className="border border-black"
           />
-          {errors.sname?.message && <p>{errors.sname.message.toString()}</p>}
+          {errors.sname?.message && (
+            <p className="text-red-500 text-sm">
+              {errors.sname.message.toString()}
+            </p>
+          )}
         </div>
         <div className="">
           <label htmlFor="lname" className="">
@@ -142,12 +184,24 @@ const Step1: React.FC = () => {
             {...register("lname")}
             className="border border-black"
           />
-          {errors.lname?.message && <p>{errors.lname.message.toString()}</p>}
+          {errors.lname?.message && (
+            <p className="text-red-500 text-sm">
+              {errors.lname.message.toString()}
+            </p>
+          )}
         </div>
       </div>
 
       <div className="mt-8">
-        <p className="mb-4">Gender</p>
+        <p className="mb-4">
+          Gender
+          {errors.gender?.message && (
+            <span className="text-red-500 text-sm pl-2">
+              {errors.gender.message.toString()}
+            </span>
+          )}
+        </p>
+
         <div className="flex justify-between">
           <div>
             <input
@@ -183,7 +237,6 @@ const Step1: React.FC = () => {
             </label>
           </div>
         </div>
-        {errors.gender?.message && <p>{errors.gender.message.toString()}</p>}
       </div>
 
       <div>
@@ -198,7 +251,9 @@ const Step1: React.FC = () => {
             cols={80}
           ></textarea>
           {errors.presadd?.message && (
-            <p>{errors.presadd.message.toString()}</p>
+            <p className="text-red-500 text-sm">
+              {errors.presadd.message.toString()}
+            </p>
           )}
         </div>
         <div className="mt-4">
@@ -212,7 +267,9 @@ const Step1: React.FC = () => {
             cols={80}
           ></textarea>
           {errors.permadd?.message && (
-            <p>{errors.permadd.message.toString()}</p>
+            <p className="text-red-500 text-sm">
+              {errors.permadd.message.toString()}
+            </p>
           )}
         </div>
       </div>
@@ -230,7 +287,9 @@ const Step1: React.FC = () => {
               className="border border-black w-[224px] h-7"
             />
             {errors.mothertongue?.message && (
-              <p>{errors.mothertongue.message.toString()}</p>
+              <p className="text-red-500 text-sm">
+                {errors.mothertongue.message.toString()}
+              </p>
             )}
           </div>
           <div>
@@ -244,12 +303,21 @@ const Step1: React.FC = () => {
             >
               <option value="">Select a Country</option>
               <option value="India">India</option>
-              <option value="US">United States</option>
-              <option value="UK">United Kingdom</option>
+              <option value="Taiwan">Taiwan</option>
+              <option value="UAE">United Arab Emirates</option>
+              <option value="China">China</option>
+              <option value="Thailand">Thailand</option>
+              <option value="Japan">Japan</option>
+              <option value="South Korea">South Korea</option>
+              <option value="Singapore">Singapore</option>
+              <option value="Hong Kong">Hong Kong</option>
               <option value="Australia">Australia</option>
+              <option value="United Kingdom">United Kingdom</option>
             </select>
             {errors.nationality?.message && (
-              <p>{errors.nationality.message.toString()}</p>
+              <p className="text-red-500 text-sm">
+                {errors.nationality.message.toString()}
+              </p>
             )}
           </div>
         </div>
@@ -265,21 +333,33 @@ const Step1: React.FC = () => {
               {...register("dob")}
               className="border border-black w-[224px] h-7"
             />
-            {errors.dob?.message && <p>{errors.dob.message.toString()}</p>}
+            {errors.dob?.message && (
+              <p className="text-red-500 text-sm">
+                {errors.dob.message.toString()}
+              </p>
+            )}
           </div>
           <div>
             <div className="mb-4">
               <label htmlFor="bloodgroup">Blood Group</label>
             </div>
-            <input
-              type="text"
+            <select
               id="bloodgroup"
               {...register("bloodgroup")}
-              placeholder="O+ve"
               className="border border-black w-[224px] h-7 mr-20"
-            />
+            >
+              {" "}
+              <option value="">Select a blood group</option>
+              {bloodGroups.map((group) => (
+                <option key={group} value={group}>
+                  {group}
+                </option>
+              ))}{" "}
+            </select>
             {errors.bloodgroup?.message && (
-              <p>{errors.bloodgroup.message.toString()}</p>
+              <p className="text-red-500 text-sm">
+                {errors.bloodgroup.message.toString()}
+              </p>
             )}
           </div>
         </div>
@@ -290,27 +370,31 @@ const Step1: React.FC = () => {
               <label htmlFor="aadhaar">Aadhaar No</label>
             </div>
             <input
-              type="text"
+              type="number"
               id="aadhaar"
               {...register("aadhaar")}
               className="border border-black w-[224px] h-7"
             />
             {errors.aadhaar?.message && (
-              <p>{errors.aadhaar.message.toString()}</p>
+              <p className="text-red-500 text-sm">
+                {errors.aadhaar.message.toString()}
+              </p>
             )}
           </div>
           <div>
             <div className="mb-4">
-              <label htmlFor="passport">Passport No</label>
+              <label htmlFor="pannumber">PAN No</label>
             </div>
             <input
               type="text"
-              id="passport"
-              {...register("passport")}
+              id="pannumber"
+              {...register("pannumber")}
               className="border border-black w-[224px] h-7 mr-20"
             />
             {errors.passport?.message && (
-              <p>{errors.passport.message.toString()}</p>
+              <p className="text-red-500 text-sm">
+                {errors.passport.message.toString()}
+              </p>
             )}
           </div>
         </div>
@@ -327,7 +411,9 @@ const Step1: React.FC = () => {
               className="border border-black w-[224px] h-7"
             />
             {errors.mobile?.message && (
-              <p>{errors.mobile.message.toString()}</p>
+              <p className="text-red-500 text-sm">
+                {errors.mobile.message.toString()}
+              </p>
             )}
           </div>
           <div>
@@ -340,7 +426,11 @@ const Step1: React.FC = () => {
               {...register("email")}
               className="border border-black w-[224px] h-7 mr-20"
             />
-            {errors.email?.message && <p>{errors.email.message.toString()}</p>}
+            {errors.email?.message && (
+              <p className="text-red-500 text-sm">
+                {errors.email.message.toString()}
+              </p>
+            )}
           </div>
         </div>
       </div>

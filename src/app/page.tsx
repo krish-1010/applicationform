@@ -21,8 +21,77 @@ export default function Home() {
     resolver: zodResolver(FormDataSchema),
   });
 
+  const stepFields: { [key: string]: (keyof FormData)[] } = {
+    1: [
+      "appno",
+      "date",
+      "fname",
+      "sname",
+      "lname",
+      "gender",
+      "presadd",
+      "permadd",
+      "mothertongue",
+      "nationality",
+      "dob",
+      "bloodgroup",
+      "aadhaar",
+      "passport",
+      "mobile",
+      "email",
+      "img",
+    ],
+    2: [
+      "parentname",
+      "relationshiptostudent",
+      "occupation",
+      "addressforcoresspondence",
+      "challenge",
+      "hearing",
+      "ortho",
+      "visual",
+      "blind",
+      "disable",
+    ],
+    3: ["program"],
+    4: ["comments", "paymentMethods", "otherpaymentmode"],
+    5: [
+      "feestatus",
+      "paidstatus",
+      "amountpaid",
+      "t11",
+      "t12",
+      "t13",
+      "t21",
+      "t22",
+      "t23",
+      "t31",
+      "t32",
+      "t33",
+      "t41",
+      "t42",
+      "t43",
+      "t51",
+      "t52",
+      "t53",
+      "t61",
+      "t62",
+      "t63",
+      "declarationplace",
+      "declarationdate",
+      "signApplicant",
+      "signParent",
+      "documents",
+      "documentFiles",
+      "feereceipt",
+    ],
+  };
+
   const handleNext = async () => {
-    const isStepValid = await methods.trigger(); // Ensure this only validates the current step
+    const currentStepFields = stepFields[currentStep.toString()];
+    const isStepValid = await methods.trigger(currentStepFields);
+    console.log(isStepValid);
+
     if (isStepValid) {
       setCurrentStep((prev) => Math.min(prev + 1, 5));
     }

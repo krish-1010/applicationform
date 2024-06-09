@@ -43,43 +43,43 @@ export default function Step4() {
         <div className="text-xl font-bold mb-3 mt-8">Payment Mode:</div>
         <div className="grid grid-cols-5 gap-2">
           <label>
-            <input type="checkbox" {...register("cash")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             Cash
           </label>
           <label>
-            <input type="checkbox" {...register("cheque")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             Cheque
           </label>
           <label>
-            <input type="checkbox" {...register("dd")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             DD
           </label>
           <label>
-            <input type="checkbox" {...register("neft")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             NEFT
           </label>
           <label>
-            <input type="checkbox" {...register("rtgs")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             RTGS
           </label>
           <label>
-            <input type="checkbox" {...register("nach")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             NACH
           </label>
           <label>
-            <input type="checkbox" {...register("credit")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             Credit Card
           </label>
           <label>
-            <input type="checkbox" {...register("debit")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             Debit Card
           </label>
           <label>
-            <input type="checkbox" {...register("gpay")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             GPay
           </label>
           <label>
-            <input type="checkbox" {...register("phnpe")} />
+            <input type="checkbox" {...register("paymentMethods")} />
             Phone Pe
           </label>
         </div>

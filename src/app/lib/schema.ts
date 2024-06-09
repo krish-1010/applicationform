@@ -1,30 +1,81 @@
+
 import { z } from 'zod';
 
-function checkFileType(file: File) {
-    if (file?.name) {
-        const fileType = file.name.split(".").pop();
-        if (fileType === "jpg" || fileType === "jpeg") return false;
-    }
-    return true;
+function checkFileType(fileList: FileList) {
+  const file = fileList[0];
+  if (file) {
+    const fileType = file.type.split('/').pop();
+    return fileType === 'jpeg' || fileType === 'png' || fileType === 'jpg';
+  }
+  return false;
 }
 
+export const imgSchema = z
+  .instanceof(FileList)
+  .refine((fileList) => fileList.length > 0, 'Image is required')
+  .refine((fileList) => checkFileType(fileList), 'Only .jpg, .jpeg, and .png formats are supported.')
+  .refine((fileList) => fileList[0]?.size <= 5 * 1024 * 1024, 'File size must be less than 5MB.');
+
+  // Regex to match dd/mm/yyyy format
+const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+const stringOnlyRegex = /^[a-zA-Z\s]*$/;
+const addressRegex = /^(?=.*[A-Za-z])[A-Za-z0-9\s,.-]+$/;
+
+
+//dateregex:
+// .regex(dateRegex, { message: "Invalid date format, expected dd/mm/yyyy" })
+//   .refine(dateString => {
+//     const [day, month, year] = dateString.split('/').map(Number);
+//     const date = new Date(year, month - 1, day);
+//     return (
+//       date.getFullYear() === year &&
+//       date.getMonth() === month - 1 &&
+//       date.getDate() === day
+//     );
+//   }, { message: "Invalid date" }),
+
 export const FormDataSchema = z.object({
-  appno: z.string().min(1, 'Application number is required'),
-  date: z.string().min(1, 'Date is required'),
-  fname: z.string().min(1, 'First name is required'),
-  sname: z.string().min(1, 'Surname is required'),
+  appno: z.string({
+    required_error: "Age is required",
+    invalid_type_error: "Age must be a number",
+  }).optional(),
+
+  date: z.date({
+    required_error: "Date is required"
+  }).refine(date => date instanceof Date && !isNaN(date.getTime()), {
+    message: "Invalid date",
+  }),
+  
+  fname: z.string().min(1, 'First name is required').regex(stringOnlyRegex, { message: "Name must not contain numbers or special characters" }),
+  sname: z.string().regex(stringOnlyRegex, { message: "Name must not contain numbers or special characters" }).optional(),
   lname: z.string().min(1, 'Last name is required'),
-  gender: z.string().min(1, 'Gender is required'),
-  presadd: z.string().min(1, 'Present address is required'),
-  permadd: z.string().min(1, 'Permanent address is required'),
-  mothertongue: z.string().min(1, 'Mother tongue is required'),
+  gender: z.string({
+    required_error: "Gender is required",
+    invalid_type_error: "Gender must be a Selected",
+  }).min(1, 'Gender is required'),
+
+
+  presadd: z.string().min(1, 'Present address is required').regex(addressRegex, {message: "Address Cannot contain only numbers"}),
+  permadd: z.string().min(1, 'Permanent address is required').regex(addressRegex, {message: "Address Cannot contain only numbers"}),
+
+  mothertongue: z.string().min(1, 'Mother tongue is required').regex(stringOnlyRegex, {message: "Mother Toungue cannot contain numbers"}),
   nationality: z.string().min(1, 'Nationality is required'),
+
+  //TODO: check if this works on submission
   dob: z.string().min(1, 'Date of birth is required'),
+
   bloodgroup: z.string().min(1, 'Blood group is required'),
-  aadhaar: z.string().min(1, 'Aadhaar number is required'),
-  passport: z.string().optional(),
-  mobile: z.string().min(1, 'Mobile number is required'),
+
+  aadhaar: z.string().length(12, { message: "Aadhaar number must be exactly 12 digits" })
+  .regex(/^[1-9]\d{11}$/, { message: "Aadhaar number must be a valid 12-digit number starting with a digit from 1-9" }),
+
+  pannumber: z.string().optional(),
+
+  mobile: z.string().length(10, { message: "Mobile number must be exactly 10 digits" })
+  .regex(/^[6-9]\d{9}$/, { message: "Mobile number must start with a digit from 6 to 9 and be followed by 9 digits" }),
+
   email: z.string().email('Invalid email address'),
+
   parentname: z.string().min(1, 'Parent name is required'),
   relationshiptostudent: z.string().min(1, 'Relationship to student is required'),
   occupation: z.string().min(1, 'Occupation is required'),
@@ -36,17 +87,8 @@ export const FormDataSchema = z.object({
   blind: z.string().optional(),
   disable: z.string().optional(),
   program: z.string().min(1, 'Program is required'),
-  comments: z.string().optional(),
-  cash: z.boolean(),
-  cheque: z.boolean(),
-  dd: z.boolean(),
-  neft: z.boolean(),
-  rtgs: z.boolean(),
-  nach: z.boolean(),
-  credit: z.boolean(),
-  debit: z.boolean(),
-  gpay: z.boolean(),
-  phnpe: z.boolean(),
+  comments: z.string(),
+  paymentMethods: z.string().min(1, "At least one payment method must be selected."),
   otherpaymentmode: z.string().optional(),
   feestatus: z.string().min(1, 'Fee status is required'),
   paidstatus: z.string().optional(),
@@ -76,5 +118,6 @@ export const FormDataSchema = z.object({
   documents: z.string().optional(),
   documentFiles: z.record(z.string(), z.instanceof(File)).optional(),
   feereceipt: z.string().optional(),
-  img: z.any().refine((file: File) => checkFileType(file), "Only .pdf, .docx formats are supported."),
+  
+  img: imgSchema,
 });

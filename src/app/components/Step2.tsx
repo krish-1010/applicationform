@@ -93,8 +93,10 @@ const Step2: React.FC = () => {
               className="border border-black"
               id="parentname"
             />
-            {errors.parentname && (
-              <p className="text-red-500">{errors.parentname.message}</p>
+            {errors.parentname?.message && (
+              <p className="text-red-500">
+                {errors.parentname.message.toString()}
+              </p>
             )}
           </div>
           <div className="flex flex-col gap-2">
