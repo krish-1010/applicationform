@@ -60,6 +60,7 @@ const Step1: React.FC = () => {
               <label htmlFor="appno" className="block w-[112px] mr-2">
                 Application No
               </label>
+              
               <input
                 type="number"
                 id="appno"
@@ -166,9 +167,13 @@ const Step1: React.FC = () => {
             {...register("sname")}
             className="border border-black"
           />
-          {errors.sname?.message && (
+          {/*
+          {errors.otherpay && (
+            <p className="text-red-500">{String(errors.otherpay?.message)}</p>
+          )}*/}
+          {errors.sname && (
             <p className="text-red-500 text-sm">
-              {errors.sname.message.toString()}
+              {String(errors.sname?.message)}
             </p>
           )}
         </div>

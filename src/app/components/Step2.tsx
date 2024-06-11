@@ -1,11 +1,25 @@
-import React from "react";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 const Step2: React.FC = () => {
   const {
     register,
     formState: { errors },
+    watch,
   } = useFormContext();
+
+  const formData = watch();
+
+  const [selectedYes, setselectedYes] = useState("no");
+
+  // useEffect(() => {
+  //   if (formData?.challenge) {
+  //     console.log(formData.challenge);
+  //     if (formData.challenge == "yes") {
+  //       console.log("display");
+  //     }
+  //   }
+  // }, [formData.challenge]);
 
   const columns = [
     { label: "Qualification", width: "w-1/6" },
@@ -35,9 +49,91 @@ const Step2: React.FC = () => {
     },
   ];
 
+  const allrows = [
+    "textbox11",
+    "textbox12",
+    "textbox13",
+    "textbox14",
+    "textbox15",
+    "textbox21",
+    "textbox22",
+    "textbox23",
+    "textbox24",
+    "textbox25",
+    "textbox31",
+    "textbox32",
+    "textbox33",
+    "textbox34",
+    "textbox35",
+    "textbox41",
+    "textbox42",
+    "textbox43",
+    "textbox44",
+    "textbox45",
+  ];
+
+  const yearFields = ["textbox14", "textbox24", "textbox34", "textbox44"];
+  const percentageFields = ["textbox15", "textbox25", "textbox35", "textbox45"];
+
+  const hasAcademicErrors = () => {
+    return allrows.some((field: string) => errors[field]);
+  };
+
+  function checkifYearError() {
+    return yearFields.some((field) => errors[field]);
+  }
+
+  function noRequiredYears() {
+    return yearFields.every((field) => errors[field]?.message !== "required");
+  }
+
+  const hasYearErrors = () => {
+    if (checkifYearError() && noRequiredYears()) {
+      return true;
+    }
+  };
+
+  // --------------------------------------------------------
+
+  function checkifPercentageError() {
+    return percentageFields.some((field) => errors[field]);
+  }
+
+  function noRequiredPercentage() {
+    return percentageFields.every(
+      (field) => errors[field]?.message !== "required"
+    );
+  }
+
+  const hasPercentageErrors = () => {
+    if (checkifPercentageError() && noRequiredPercentage()) {
+      return true;
+    }
+  };
+
+  // const hasPercentageErrors = () => {
+  //   return percentageFields.some((field) => errors[field]);
+  // };
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Academic Qualification</h2>
+      {hasAcademicErrors() && (
+        <div className="text-red-500 mb-4">
+          Please fill out all required fields in Academic Field correctly.
+        </div>
+      )}
+      {hasYearErrors() && (
+        <div className="text-red-500 mb-4">
+          Please enter valid years for the Year of Passing fields.
+        </div>
+      )}
+      {hasPercentageErrors() && (
+        <div className="text-red-500 mb-4">
+          Please enter valid Percentage for the Percentage fields.
+        </div>
+      )}
+
       <div className="flex flex-col items-center w-full">
         <div className="flex flex-col w-full max-w-5xl">
           <div className="flex flex-wrap border border-black">
@@ -61,18 +157,18 @@ const Step2: React.FC = () => {
               {row.fields.map((field, idx) => (
                 <div
                   key={idx}
-                  className={`${columns[idx + 1].width}  border-r border-black`}
+                  className={`${columns[idx + 1].width} border-r border-black`}
                 >
                   <input
                     type="text"
                     {...register(field)}
                     className="w-full h-full border"
                   />
-                  {errors[field] && (
+                  {/* {errors[field] && (
                     <p className="text-red-500">
                       {String(errors[field]?.message)}
                     </p>
-                  )}
+                  )} */}
                 </div>
               ))}
             </div>
@@ -103,15 +199,19 @@ const Step2: React.FC = () => {
             <label htmlFor="relationshiptostudent">
               Relationship to the Student
             </label>
-            <input
-              type="text"
+            <select
               {...register("relationshiptostudent")}
               className="border border-black"
               id="relationshiptostudent"
-            />
-            {errors.relationshiptostudent && (
+            >
+              <option value="">Select</option>
+              <option value="father">Father</option>
+              <option value="mother">Mother</option>
+              <option value="guardian">Guardian</option>
+            </select>
+            {errors.relationshiptostudent?.message && (
               <p className="text-red-500">
-                {errors.relationshiptostudent.message}
+                {errors.relationshiptostudent.message.toString()}
               </p>
             )}
           </div>
@@ -126,8 +226,10 @@ const Step2: React.FC = () => {
               className="border border-black"
               id="occupation"
             />
-            {errors.occupation && (
-              <p className="text-red-500">{errors.occupation.message}</p>
+            {errors.occupation?.message && (
+              <p className="text-red-500">
+                {errors.occupation.message.toString()}
+              </p>
             )}
           </div>
         </div>
@@ -147,36 +249,40 @@ const Step2: React.FC = () => {
           rows={4}
           className="border border-black"
         ></textarea>
-        {errors.addressforcoresspondence && (
+        {errors.addressforcoresspondence?.message && (
           <p className="text-red-500">
-            {errors.addressforcoresspondence.message}
+            {errors.addressforcoresspondence.message.toString()}
           </p>
         )}
       </div>
 
       <div className="flex justify-between mb-10 mt-8">
         <div className="flex flex-col gap-2">
-          <label htmlFor="mobile">Mobile</label>
+          <label htmlFor="parentmobile">Parent Mobile</label>
           <input
             type="text"
-            {...register("mobile")}
+            {...register("parentmobile")}
             className="border border-black"
-            id="mobile"
+            id="parentmobile"
           />
-          {errors.mobile && (
-            <p className="text-red-500">{errors.mobile.message}</p>
+          {errors.parentmobile?.message && (
+            <p className="text-red-500">
+              {errors.parentmobile.message.toString()}
+            </p>
           )}
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="parentemail">Parent Email</label>
           <input
             type="text"
-            {...register("email")}
+            {...register("parentemail")}
             className="border border-black"
-            id="email"
+            id="parentemail"
           />
-          {errors.email && (
-            <p className="text-red-500">{errors.email.message}</p>
+          {errors.parentemail?.message && (
+            <p className="text-red-500">
+              {errors.parentemail.message.toString()}
+            </p>
           )}
         </div>
       </div>
@@ -200,6 +306,10 @@ const Step2: React.FC = () => {
                 {...register("challenge")}
                 id="yes1"
                 value="yes"
+                checked={selectedYes === "yes"}
+                onChange={() => {
+                  setselectedYes("yes");
+                }}
               />
               Yes
             </label>
@@ -209,25 +319,33 @@ const Step2: React.FC = () => {
                 {...register("challenge")}
                 id="no1"
                 value="no"
+                checked={selectedYes === "no"}
+                onChange={() => {
+                  setselectedYes("no");
+                }}
               />
               No
             </label>
           </div>
         </div>
-        <div className="flex justify-between items-center">
-          <label className="flex-1">
-            <input type="checkbox" {...register("hearing")} id="hearing" />
-            Hearing
-          </label>
-          <label className="flex-1">
-            <input type="checkbox" {...register("ortho")} id="ortho" />
-            Orthopedic
-          </label>
-          <label className="flex-1">
-            <input type="checkbox" {...register("visual")} id="visual" />
-            Visual
-          </label>
-        </div>
+        {selectedYes === "yes" ? (
+          <div className="flex justify-between items-center">
+            <label className="flex-1">
+              <input type="checkbox" {...register("hearing")} id="hearing" />
+              Hearing
+            </label>
+            <label className="flex-1">
+              <input type="checkbox" {...register("ortho")} id="ortho" />
+              Orthopedic
+            </label>
+            <label className="flex-1">
+              <input type="checkbox" {...register("visual")} id="visual" />
+              Visual
+            </label>
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="flex justify-between items-center">
           <label htmlFor="blind" className="flex-1">
             Do you have Color Blindness?
@@ -277,5 +395,4 @@ const Step2: React.FC = () => {
     </div>
   );
 };
-
 export default Step2;

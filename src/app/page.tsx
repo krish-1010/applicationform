@@ -36,13 +36,15 @@ export default function Home() {
       "dob",
       "bloodgroup",
       "aadhaar",
-      "passport",
+      "pannumber",
       "mobile",
       "email",
       "img",
     ],
     2: [
       "parentname",
+      "parentmobile",
+      "parentemail",
       "relationshiptostudent",
       "occupation",
       "addressforcoresspondence",
@@ -52,6 +54,30 @@ export default function Home() {
       "visual",
       "blind",
       "disable",
+
+      "textbox11",
+      "textbox12",
+      "textbox13",
+      "textbox14",
+      "textbox15",
+
+      "textbox21",
+      "textbox22",
+      "textbox23",
+      "textbox24",
+      "textbox25",
+
+      "textbox31",
+      "textbox32",
+      "textbox33",
+      "textbox34",
+      "textbox35",
+
+      "textbox41",
+      "textbox42",
+      "textbox43",
+      "textbox44",
+      "textbox45",
     ],
     3: ["program"],
     4: ["comments", "paymentMethods", "otherpaymentmode"],
@@ -94,6 +120,13 @@ export default function Home() {
 
     if (isStepValid) {
       setCurrentStep((prev) => Math.min(prev + 1, 5));
+    } else {
+      currentStepFields.forEach((field) => {
+        const fieldState = methods.getFieldState(field);
+        if (fieldState.error) {
+          console.error(`Error in ${field}: ${fieldState.error.message}`);
+        }
+      });
     }
   };
 
@@ -108,13 +141,22 @@ export default function Home() {
 
   return (
     <main className="bg-gray-300 pt-2 pb-2">
-      <div className="w-[60%] bg-white border ml-auto mr-auto p-10 border-black h-[98%]">
+      <div className="xl:w-[1200px] bg-white border ml-auto mr-auto p-10 border-black h-[98%]">
         <div className="border-8 h-full p-4 border-blue-900">
           <div className="border-2 border-blue-900 p-8 h-full flex items-center flex-col">
             <Image src={myimg} alt="our logo" height={90} width={150} />
             <h1 className="text-2xl mb-12">
               <b>Application Form</b>
             </h1>
+            <div>
+              <button
+                onClick={() => {
+                  setCurrentStep((prev) => Math.min(prev + 1, 5));
+                }}
+              >
+                next
+              </button>
+            </div>
             <FormProvider {...methods}>
               <form
                 onSubmit={methods.handleSubmit(handleSubmit)}

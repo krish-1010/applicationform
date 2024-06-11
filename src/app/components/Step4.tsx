@@ -41,6 +41,11 @@ export default function Step4() {
         )}
 
         <div className="text-xl font-bold mb-3 mt-8">Payment Mode:</div>
+        {errors.otherpaymentmode && (
+          <span className="text-red-500">
+            {String(errors.otherpaymentmode?.message)}
+          </span>
+        )}
         <div className="grid grid-cols-5 gap-2">
           <label>
             <input type="checkbox" {...register("paymentMethods")} />
@@ -89,13 +94,15 @@ export default function Step4() {
             <b className="mr-2">Others </b>
             <input
               type="text"
-              id="otherpay"
-              {...register("otherpay")}
+              id="otherpaymentmode"
+              {...register("otherpaymentmode")}
               className="border-b border-dotted border-black"
             />
           </label>
-          {errors.otherpay && (
-            <p className="text-red-500">{String(errors.otherpay?.message)}</p>
+          {errors.otherpaymentmode && (
+            <p className="text-red-500">
+              {String(errors.otherpaymentmode?.message)}
+            </p>
           )}
         </div>
       </div>

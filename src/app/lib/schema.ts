@@ -20,6 +20,9 @@ export const imgSchema = z
 const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 const stringOnlyRegex = /^[a-zA-Z\s]*$/;
 const addressRegex = /^(?=.*[A-Za-z])[A-Za-z0-9\s,.-]+$/;
+const numberOnlyRegex = /^\d+$/;
+const numberOnlyRegexWithTrailingSpaces = /^\d+\s*$/;
+const numericFieldSchema = z.string().regex(/^\d+$/, { message: "This field must be a number" });
 
 
 //dateregex:
@@ -33,6 +36,20 @@ const addressRegex = /^(?=.*[A-Za-z])[A-Za-z0-9\s,.-]+$/;
 //       date.getDate() === day
 //     );
 //   }, { message: "Invalid date" }),
+
+function checkYear(value: string){
+  const trimmedValue = value.trim();
+  const year = Number(trimmedValue);
+  console.log("Trimmed Year:", year);
+  return year >= 1900 && year <= 2100;
+}
+
+function checkPercentage(value: string){
+  value.trim();
+  if(Number(value) < 1 || Number(value) > 100){
+    return false;
+  } return true;
+}
 
 export const FormDataSchema = z.object({
   appno: z.string({
@@ -76,19 +93,66 @@ export const FormDataSchema = z.object({
 
   email: z.string().email('Invalid email address'),
 
-  parentname: z.string().min(1, 'Parent name is required'),
+  parentmobile: z.string().length(10, { message: "Mobile number must be exactly 10 digits" })
+  .regex(/^[6-9]\d{9}$/, { message: "Mobile number must start with a digit from 6 to 9 and be followed by 9 digits" }),
+
+  parentemail: z.string().email('Invalid email address'),
+
+  textbox11: z.string().min(1, "required"),
+  textbox12: z.string().min(1, "required"),
+  textbox13: z.string().min(1, "required"),
+
+  textbox14: z.string().min(1, "required")
+  .regex(numberOnlyRegexWithTrailingSpaces, {message: "Enter a Valid Year"})
+  .refine((value) => checkYear(value), {message: "Enter a Valid Year in the first row"}),
+
+  textbox15: z.string().min(1, "required")
+  .regex(numberOnlyRegexWithTrailingSpaces, {message: "Enter a Valid Percentage n"})
+  .refine((value) => checkPercentage(value), {message: "Enter a Valid Percentage eg.(75)"}),
+
+  textbox21: z.string().min(1, "required"),
+  textbox22: z.string().min(1, "required"),
+  textbox23: z.string().min(1, "required"),
+  textbox24: z.string().min(1, "required")
+  .regex(numberOnlyRegexWithTrailingSpaces, {message: "Enter a Valid Year r"})
+  .refine((value) => checkYear(value), {message: "Enter a Valid Year"}),
+  textbox25: z.string().min(1, "required")
+  .regex(numberOnlyRegexWithTrailingSpaces, {message: "Enter a Valid Percentage n"})
+  .refine((value) => checkPercentage(value), {message: "Enter a Valid Percentage eg.(75)"}),
+
+  textbox31: z.string().min(1, "required"),
+  textbox32: z.string().min(1, "required"),
+  textbox33: z.string().min(1, "required"),
+  textbox34: z.string().min(1, "required")
+  .regex(numberOnlyRegexWithTrailingSpaces, {message: "Enter a Valid Year"})
+  .refine((value) => checkYear(value), {message: "Enter a Valid Year"}),
+  textbox35: z.string().min(1, "required")
+  .regex(numberOnlyRegexWithTrailingSpaces, {message: "Enter a Valid Percentage n"})
+  .refine((value) => checkPercentage(value), {message: "Enter a Valid Percentage eg.(75)"}),
+
+  textbox41: z.string().min(1, "required"),
+  textbox42: z.string().min(1, "required"),
+  textbox43: z.string().min(1, "required"),
+  textbox44: z.string().min(1, "required")
+  .regex(numberOnlyRegexWithTrailingSpaces, {message: "Enter a Valid Year"})
+  .refine((value) => checkYear(value), {message: "Enter a Valid Year"}),
+  textbox45: z.string().min(1, "required")
+  .regex(numberOnlyRegexWithTrailingSpaces, {message: "Enter a Valid Percentage n"})
+  .refine((value) => checkPercentage(value), {message: "Enter a Valid Percentage eg.(75)"}),
+
+  parentname: z.string().min(1, 'Parent name is required').regex(stringOnlyRegex, {message: "Only Letters is accepted"}),
   relationshiptostudent: z.string().min(1, 'Relationship to student is required'),
   occupation: z.string().min(1, 'Occupation is required'),
   addressforcoresspondence: z.string().min(1, 'Address for correspondence is required'),
   challenge: z.string().min(1, 'Challenge information is required'),
-  hearing: z.boolean(),
-  ortho: z.boolean(),
-  visual: z.boolean(),
+  hearing: z.boolean().optional(),
+  ortho: z.boolean().optional(),
+  visual: z.boolean().optional(),
   blind: z.string().optional(),
   disable: z.string().optional(),
   program: z.string().min(1, 'Program is required'),
-  comments: z.string(),
-  paymentMethods: z.string().min(1, "At least one payment method must be selected."),
+  comments: z.string().optional(),
+  paymentMethods: z.array(z.string()),
   otherpaymentmode: z.string().optional(),
   feestatus: z.string().min(1, 'Fee status is required'),
   paidstatus: z.string().optional(),

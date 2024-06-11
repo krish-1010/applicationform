@@ -10,7 +10,9 @@ const Step3 = () => {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Programs</h2>
-
+      {errors.program?.message && (
+        <p className="text-red-500">{String(errors.program.message)}</p>
+      )}
       <div className="degree-container flex flex-col mb-4">
         <h2 className="text-lg font-semibold">Degree</h2>
         <div className="flex mb-4">
