@@ -2,6 +2,8 @@
 import { z } from 'zod';
 
 function checkFileType(fileList: FileList) {
+  if (typeof window === 'undefined') return true; // Skip validation on server
+
   const file = fileList[0];
   if (file) {
     const fileType = file.type.split('/').pop();
