@@ -1,8 +1,12 @@
 
 import { z } from 'zod';
 
+// Type guard to check if the value is a FileList
+function isFileList(value: unknown): value is FileList {
+  return typeof FileList !== 'undefined' && value instanceof FileList;
+}
+
 function checkFileType(fileList: FileList) { 
-  if (typeof window === 'undefined') return true; // Skip validation on server
   const file = fileList[0];
   if (file) {
     const fileType = file.type.split('/').pop();
@@ -11,12 +15,30 @@ function checkFileType(fileList: FileList) {
   return false;
 }
 
-export const imgSchemaClient = z
-  .instanceof(FileList)
-  .refine((fileList) => fileList.length > 0, 'Image is required')
-  .refine((fileList) => checkFileType(fileList), 'Only .jpg, .jpeg, and .png formats are supported.')
-  .refine((fileList) => fileList[0]?.size <= 5 * 1024 * 1024, 'File size must be less than 5MB.');
-
+const imgSchema = z
+  .any() // Use any as the initial type
+  .refine((value) => typeof window === 'undefined' || isFileList(value), {
+    message: 'Invalid file input.',
+  })
+  .refine(
+    (fileList) => typeof window === 'undefined' || (fileList as FileList).length > 0,
+    {
+      message: 'Image is required',
+    }
+  )
+  .refine(
+    (fileList) => typeof window === 'undefined' || checkFileType(fileList as FileList),
+    {
+      message: 'Only .jpg, .jpeg, and .png formats are supported.',
+    }
+  )
+  .refine(
+    (fileList) =>
+      typeof window === 'undefined' || (fileList as FileList)[0]?.size <= 5 * 1024 * 1024,
+    {
+      message: 'File size must be less than 5MB.',
+    }
+  );
   // Regex to match dd/mm/yyyy format
 const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 const stringOnlyRegex = /^[a-zA-Z\s]*$/;
@@ -186,5 +208,5 @@ export const FormDataSchema = z.object({
   documentFiles: z.record(z.string(), z.instanceof(File)).optional(),
   feereceipt: z.string().optional(),
   
-  img: typeof window !== "undefined" ? imgSchemaClient : imgSchemaServer,
+  img: imgSchema,
 });
