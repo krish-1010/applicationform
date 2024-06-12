@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import myimg from "../../public/assests/header.png";
-import Step1 from "./components/Step1";
+// import Step1 from "./components/Step1";
 import Step2 from "./components/Step2";
 import Step3 from "./components/Step3";
 import Step4 from "./components/Step4";
@@ -11,7 +11,10 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormDataSchema } from "./lib/schema";
 import { z } from "zod";
-
+import dynamic from "next/dynamic";
+const DynamicFormComponent = dynamic(() => import("./components/Step1"), {
+  ssr: false,
+});
 
 type FormData = z.infer<typeof FormDataSchema>;
 
@@ -163,7 +166,7 @@ export default function Home() {
                 onSubmit={methods.handleSubmit(handleSubmit)}
                 className="w-full"
               >
-                {currentStep === 1 && <Step1 />}
+                {currentStep === 1 && <DynamicFormComponent />}
                 {currentStep === 2 && <Step2 />}
                 {currentStep === 3 && <Step3 />}
                 {currentStep === 4 && <Step4 />}
