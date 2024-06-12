@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormDataSchema } from "./lib/schema";
 import { z } from "zod";
 import dynamic from "next/dynamic";
-const DynamicFormComponent = dynamic(() => import("./components/Step1"), {
+const Step1 = dynamic(() => import("./components/Step1"), {
   ssr: false,
 });
 
@@ -166,7 +166,7 @@ export default function Home() {
                 onSubmit={methods.handleSubmit(handleSubmit)}
                 className="w-full"
               >
-                {currentStep === 1 && <DynamicFormComponent />}
+                {currentStep === 1 && <Step1 />}
                 {currentStep === 2 && <Step2 />}
                 {currentStep === 3 && <Step3 />}
                 {currentStep === 4 && <Step4 />}

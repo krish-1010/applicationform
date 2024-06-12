@@ -11,7 +11,7 @@ function checkFileType(fileList: FileList) {
   return false;
 }
 
-export const imgSchema = z
+export const imgSchemaClient = z
   .instanceof(FileList)
   .refine((fileList) => fileList.length > 0, 'Image is required')
   .refine((fileList) => checkFileType(fileList), 'Only .jpg, .jpeg, and .png formats are supported.')
@@ -51,6 +51,8 @@ function checkPercentage(value: string){
     return false;
   } return true;
 }
+
+const imgSchemaServer = z.any();
 
 export const FormDataSchema = z.object({
   appno: z.string({
@@ -184,5 +186,5 @@ export const FormDataSchema = z.object({
   documentFiles: z.record(z.string(), z.instanceof(File)).optional(),
   feereceipt: z.string().optional(),
   
-  img: imgSchema,
+  img: typeof window !== "undefined" ? imgSchemaClient : imgSchemaServer,
 });
