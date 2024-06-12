@@ -12,12 +12,12 @@ function checkFileType(fileList: FileList) {
   return false;
 }
 
-export const imgSchema = z
-  .instanceof(FileList)
-  .refine((fileList) => fileList.length > 0, 'Image is required')
-  .refine((fileList) => checkFileType(fileList), 'Only .jpg, .jpeg, and .png formats are supported.')
-  .refine((fileList) => fileList[0]?.size <= 5 * 1024 * 1024, 'File size must be less than 5MB.');
-
+export const imgSchema = z.instanceof(FileList).refine((fileList) => {
+  if (typeof window === 'undefined') return true; // Skip validation on server
+  return fileList.length > 0 && checkFileType(fileList) && fileList[0]?.size <= 5 * 1024 * 1024;
+}, {
+  message: 'Image is required and must be .jpg, .jpeg, or .png format and less than 5MB in size.',
+});
   // Regex to match dd/mm/yyyy format
 const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 const stringOnlyRegex = /^[a-zA-Z\s]*$/;
