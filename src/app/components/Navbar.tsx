@@ -2,7 +2,7 @@ import Image from "next/image";
 import myimg from "../../../public/assests/header.png";
 import Link from "next/link";
 import { User } from "next-auth";
-import { signOut } from "@/auth";
+// import { signOut } from "@/auth";
 import { signOutAction } from "../actions";
 
 type NavbarProps = {
@@ -19,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
       <div>
         {user ? (
           <>
-            {user.name}{" "}
+            {user.username}
             <div>
               <SignOutButton />
             </div>
@@ -43,7 +43,7 @@ const SignInButton = () => {
 const SignOutButton = () => {
   return (
     <form action={signOutAction}>
-      <button type="submit"> Sign out</button>
+      <button type="submit">Sign out</button>
     </form>
   );
 };

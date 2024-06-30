@@ -9,7 +9,7 @@ import { FormDataSchema } from "../lib/schema";
 import { stepFields } from "../lib/importData";
 import { z } from "zod";
 import Navbar from "./Navbar";
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 import { User } from "next-auth";
 
 const Step1 = dynamic(() => import("./Step1"), {
