@@ -32,6 +32,13 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
   );
 };
 
+const handleSubmit = () => {
+  // Refresh the page after form submission
+  setTimeout(() => {
+    window.location.reload();
+  }, 1500); // Adjust the timeout as needed
+};
+
 const SignInButton = () => {
   return (
     <>
@@ -42,7 +49,7 @@ const SignInButton = () => {
 
 const SignOutButton = () => {
   return (
-    <form action={signOutAction}>
+    <form action={signOutAction} onSubmit={handleSubmit}>
       <button type="submit">Sign out</button>
     </form>
   );
