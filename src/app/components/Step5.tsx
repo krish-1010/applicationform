@@ -6,9 +6,15 @@ export default function Step5() {
     register,
     formState: { errors },
     watch,
+    handleSubmit,
   } = useFormContext();
 
   const formData = watch();
+
+  const onSubmit = (data: any) => {
+    console.log("Step5 data:", data);
+    // Do something with the data
+  };
 
   return (
     <div>
@@ -256,7 +262,6 @@ export default function Step5() {
             type="file"
             {...register("signApplicant")}
             id="signApplicant"
-            hidden
           />
           <button
             type="button"
@@ -277,12 +282,7 @@ export default function Step5() {
           <label className="text-base font-bold" htmlFor="signParent">
             Signature of the Parent/Guardian:
           </label>
-          <input
-            type="file"
-            {...register("signParent")}
-            id="signParent"
-            hidden
-          />
+          <input type="file" {...register("signParent")} id="signParent" />
           <button
             type="button"
             className={`border pl-2 pr-2 border-black ${
@@ -297,6 +297,13 @@ export default function Step5() {
           )}
         </div>
       </div>
+      {/* <button
+        onClick={handleSubmit(() => {
+          console.log("hi");
+        })}
+      >
+        Submit Step 5
+      </button> */}
     </div>
   );
 }

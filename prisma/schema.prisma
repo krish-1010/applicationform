@@ -21,8 +21,9 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    FormData  FormData[]
 
     @@map("users")
 }
@@ -47,6 +48,98 @@ model Account {
 
     @@id([provider, providerAccountId])
     @@map("accounts")
+}
+
+model FormData {
+    id                       String   @id @default(cuid())
+    userId                   String
+    user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    appno                    String? // optional
+    date                     DateTime
+    fname                    String
+    sname                    String? // optional
+    lname                    String
+    gender                   String
+    presadd                  String
+    permadd                  String
+    mothertongue             String
+    nationality              String
+    dob                      String
+    bloodgroup               String
+    aadhaar                  String
+    pannumber                String? // optional
+    mobile                   String
+    email                    String
+    parentmobile             String
+    parentemail              String
+    textbox11                String
+    textbox12                String
+    textbox13                String
+    textbox14                String
+    textbox15                String
+    textbox21                String
+    textbox22                String
+    textbox23                String
+    textbox24                String
+    textbox25                String
+    textbox31                String
+    textbox32                String
+    textbox33                String
+    textbox34                String
+    textbox35                String
+    textbox41                String
+    textbox42                String
+    textbox43                String
+    textbox44                String
+    textbox45                String
+    parentname               String
+    relationshiptostudent    String
+    occupation               String
+    addressforcoresspondence String
+    challenge                String
+    hearing                  Boolean? // optional
+    ortho                    Boolean? // optional
+    visual                   Boolean? // optional
+    blind                    String? // optional
+    disable                  String? // optional
+    program                  String
+    comments                 String?
+    paymentMethods           String[] // array of strings
+    otherpaymentmode         String?
+    feestatus                String
+    paidstatus               String?
+    amountpaid               String
+    t11                      String?
+    t12                      String?
+    t13                      String?
+    t21                      String?
+    t22                      String?
+    t23                      String?
+    t31                      String?
+    t32                      String?
+    t33                      String?
+    t41                      String?
+    t42                      String?
+    t43                      String?
+    t51                      String?
+    t52                      String?
+    t53                      String?
+    t61                      String?
+    t62                      String?
+    t63                      String?
+    declarationplace         String
+    declarationdate          String
+    signApplicant            String? // assuming file path
+    signParent               String? // assuming file path
+    documents                String?
+    documentFiles            Json? // assuming JSON object for file paths
+    feereceipt               String?
+    img                      String? // assuming file path
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("form_data")
 }
 
 model Session {

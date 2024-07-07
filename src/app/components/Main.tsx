@@ -19,6 +19,7 @@ import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Step5 from "./Step5";
+import { submitFormData } from "@/utils/api";
 
 type FormData = z.infer<typeof FormDataSchema>;
 
@@ -27,7 +28,13 @@ const Main = ({ user }: { user: User | null }) => {
 
   const methods = useForm<FormData>({
     resolver: zodResolver(FormDataSchema),
+    mode: "onBlur",
   });
+
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = methods;
 
   const handleNext = async () => {
     const currentStepFields = stepFields[currentStep.toString()];
@@ -50,9 +57,13 @@ const Main = ({ user }: { user: User | null }) => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleSubmit = (data: FormData) => {
-    console.log(data);
-    // Handle final form submission
+  // const handleSubmit = (data: FormData) => {
+  //   console.log(data);
+  //   // Handle final form submission
+  // };
+
+  const handleFormSubmit = async (data: FormData) => {
+    console.log("Form data to submit:", data);
   };
 
   return (
@@ -61,10 +72,10 @@ const Main = ({ user }: { user: User | null }) => {
         <div className="border-8 h-full p-4 border-blue-900">
           <div className="border-2 border-blue-900 p-8 h-full flex items-center flex-col">
             <Navbar user={user} />
-            <></>
+
             <FormProvider {...methods}>
               <form
-                onSubmit={methods.handleSubmit(handleSubmit)}
+                onSubmit={handleSubmit(handleFormSubmit)}
                 className="w-full"
               >
                 {currentStep === 1 && <Step1 />}
@@ -92,7 +103,7 @@ const Main = ({ user }: { user: User | null }) => {
                       Next &raquo;
                     </button>
                   )}
-                  {currentStep === 5 && (
+                  {currentStep >= 6 || (
                     <button
                       type="submit"
                       className="btn border pl-2 pr-2 border-black rounded-sm mr-auto ml-auto text-xl mt-4 mb-4"
@@ -101,6 +112,16 @@ const Main = ({ user }: { user: User | null }) => {
                     </button>
                   )}
                 </div>
+                {Object.keys(errors).length > 0 && (
+                  <div className="text-red-500 mt-4">
+                    Please correct the highlighted errors before submitting.
+                    <ul>
+                      {Object.entries(errors).map(([key, error]) => (
+                        <li key={key}>{String(error?.message)}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </form>
             </FormProvider>
           </div>
