@@ -16,6 +16,7 @@ export async function POST(req: Request) {
 
     // Store the form data in the database with userId
     await prisma.formData.create({
+      //fix
       data: {
         ...formData,
         userId: session.user.id,
